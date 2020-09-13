@@ -1,5 +1,9 @@
 # Fg.DbUtils
 
+[![Build Status](https://frederikgheysels.visualstudio.com/GitHub%20Pipelines/_apis/build/status/Fg.DbUtils%20CI?branchName=master)](https://frederikgheysels.visualstudio.com/GitHub%20Pipelines/_build/latest?definitionId=7&branchName=master)
+[![NuGet Badge](https://buildstats.info/nuget/fg.dbutils?includePreReleases=true)](https://www.nuget.org/packages/fg.dbutils/)
+
+
 This project introduces a `DbSession` class which manages the connection to a (relational) database and the related transaction (if any).
 
 ## Usage
