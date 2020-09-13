@@ -1,0 +1,33 @@
+name: $(date:yyyyMMdd)$(rev:.r)
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - src/*
+
+pr:
+  paths:
+    include:
+      - src/*
+      - build/ci-build.yml
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Compile_and_test
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: DotNetCoreCLI@2
+            displayName: 'Build Fg.DbUtils solution'
+            inputs:
+              projects: 'src/Fg.DbUtils.sln'
+          - task: DotNetCoreCLI@2
+            displayName: 'Run unittests'
+            inputs:
+              command: 'test'
+              projects: 'src/Fg.DbUtils.Dapper.IntegrationTests/*.csproj'
+              testRunTitle: 'DbUtils integrationtests with Dapper'             
