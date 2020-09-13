@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+	<Authors>Frederik Gheysels</Authors>
+    <Copyright>Copyright © 2020 Frederik Gheysels</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/fgheysels/fg.dbutils</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fgheysels/fg.dbutils</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <Description>Introduces a DbSession object that manages the database connnection and transaction.</Description>
+    <PackageTags>DbSession Dapper Transaction Connection IDbConnection IDbTransaction</PackageTags>
   </PropertyGroup>
 
 </Project>
