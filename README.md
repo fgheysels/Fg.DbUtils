@@ -16,7 +16,7 @@ Since `IDbSession` implements the `IDbConnection` interface, integration with Da
 ```csharp
 DbSession session = new DbSession(_connection);
 
-await session.WithTransactionAsycn( async () => 
+await session.WithTransactionAsync( async () => 
 {
     // Note that we do not need to pass in the transaction parameter.
     await session.ExecuteAsync("INSERT INTO Persons (FirstName, LastName) VALUES (@FirstName, @LastName)",
