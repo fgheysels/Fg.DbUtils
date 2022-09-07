@@ -60,6 +60,19 @@ namespace Fg.DbUtils.Dapper.IntegrationTests
             });
         }
 
+        [Fact]
+        public void WithTransaction_CanReturnResult()
+        {
+            var dbSession = new DbSession(_connection);
+
+            int result = dbSession.WithTransaction(() =>
+            {
+                return 7;
+            });
+
+            Assert.Equal(7, result);
+        }
+
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
