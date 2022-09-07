@@ -34,6 +34,38 @@ namespace Fg.DbUtils
         }
 
         /// <summary>
+        /// Performs an action inside a database-transaction that returns a result.
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="action"></param>
+        public static TResult WithTransaction<TResult>(this DbSession session, Func<TResult> action)
+        {
+            if (session.IsInTransaction)
+            {
+                return action();
+            }
+            else
+            {
+                TResult result;
+
+                session.BeginTransaction();
+
+                try
+                {
+                    result = action();
+                    session.CommitTransaction();
+                }
+                catch
+                {
+                    session.RollbackTransaction();
+                    throw;
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Performs an asynchronous action inside a database-transaction.
         /// </summary>
         /// <param name="session"></param>
@@ -58,6 +90,39 @@ namespace Fg.DbUtils
                     session.RollbackTransaction();
                     throw;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Performs an asynchronous action inside a database-transaction that returns a result.
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="action"></param>
+        public static async Task<TResult> WithTransactionAsync<TResult>(this DbSession session, Func<Task<TResult>> action)
+        {            
+            if (session.IsInTransaction)
+            {
+                var result = await action();
+                return result;
+            }
+            else
+            {
+                TResult result;
+
+                session.BeginTransaction();
+
+                try
+                {
+                    result = await action();
+                    session.CommitTransaction();
+                }
+                catch
+                {
+                    session.RollbackTransaction();
+                    throw;
+                }
+
+                return result;
             }
         }
     }
