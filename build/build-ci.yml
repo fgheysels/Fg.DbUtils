@@ -19,7 +19,7 @@ stages:
     jobs:
       - job: Compile_and_test
         pool:
-          vmImage: 'ubuntu-16.04'
+          vmImage: 'ubuntu-22.04'
         steps:
           - task: DotNetCoreCLI@2
             displayName: 'Build Fg.DbUtils solution'
@@ -30,4 +30,4 @@ stages:
             inputs:
               command: 'test'
               projects: 'src/Fg.DbUtils.Dapper.IntegrationTests/*.csproj'
-              testRunTitle: 'DbUtils integrationtests with Dapper'             
+              testRunTitle: 'DbUtils integrationtests with Dapper'
