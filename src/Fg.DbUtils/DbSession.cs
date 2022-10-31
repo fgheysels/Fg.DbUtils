@@ -2,7 +2,7 @@
 
 namespace Fg.DbUtils
 {
-    public class DbSession : IDbConnection
+    public class DbSession : IDbSession
     {
         private readonly IDbConnection _connection;
 
@@ -69,7 +69,7 @@ namespace Fg.DbUtils
             {
                 return Transaction;
             }
-
+            
             Transaction = _connection.BeginTransaction(il);
 
             return Transaction;

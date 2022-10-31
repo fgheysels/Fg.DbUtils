@@ -10,7 +10,8 @@ parameters:
   type: number
 - name: PackagePatchVersion
   type: number
-
+- name: PackagePreview
+  type: boolean 
 
 variables:
 - name: Build.Configuration
@@ -45,7 +46,14 @@ stages:
             inputs:
               targetType: inline
               script: |
-                Write-Host "##vso[task.setvariable variable=PackageVersion]${{parameters.PackageMajorVersion}}.${{parameters.PackageMinorVersion}}.${{parameters.PackagePatchVersion}}"           
+                $versionSuffix = ""
+                # Double $ before the parameter expression to make sure that the return type is
+                # treated as a boolean.
+                if( $true -eq $${{parameters.PackagePreview}}) {
+                    $versionSuffix = "-beta-$(Build.BuildNumber)"
+                }
+                Write-Host "##vso[task.setvariable variable=PackageVersion]${{parameters.PackageMajorVersion}}.${{parameters.PackageMinorVersion}}.${{parameters.PackagePatchVersion}}$versionSuffix"
+
           - task: DotNetCoreCLI@2
             displayName: Package nuget Package
             inputs:
@@ -58,6 +66,7 @@ stages:
               arguments: --configuration $(Build.Configuration)
               buildProperties: 'VersionPrefix=$(PackageVersion)'
               outputDir: $(Build.StagingDirectory)/nupkg
+
           - task: PublishPipelineArtifact@1
             displayName: 'Publish artifact'
             inputs:
