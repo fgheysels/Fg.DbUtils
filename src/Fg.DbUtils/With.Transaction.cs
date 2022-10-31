@@ -10,7 +10,7 @@ namespace Fg.DbUtils
         /// </summary>
         /// <param name="session"></param>
         /// <param name="action"></param>
-        public static void WithTransaction(this DbSession session, Action action)
+        public static void WithTransaction(this IDbSession session, Action action)
         {
             if (session.IsInTransaction)
             {
@@ -38,7 +38,7 @@ namespace Fg.DbUtils
         /// </summary>
         /// <param name="session"></param>
         /// <param name="action"></param>
-        public static TResult WithTransaction<TResult>(this DbSession session, Func<TResult> action)
+        public static TResult WithTransaction<TResult>(this IDbSession session, Func<TResult> action)
         {
             if (session.IsInTransaction)
             {
@@ -70,7 +70,7 @@ namespace Fg.DbUtils
         /// </summary>
         /// <param name="session"></param>
         /// <param name="action"></param>
-        public static async Task WithTransactionAsync(this DbSession session, Func<Task> action)
+        public static async Task WithTransactionAsync(this IDbSession session, Func<Task> action)
         {
             if (session.IsInTransaction)
             {
@@ -98,7 +98,7 @@ namespace Fg.DbUtils
         /// </summary>
         /// <param name="session"></param>
         /// <param name="action"></param>
-        public static async Task<TResult> WithTransactionAsync<TResult>(this DbSession session, Func<Task<TResult>> action)
+        public static async Task<TResult> WithTransactionAsync<TResult>(this IDbSession session, Func<Task<TResult>> action)
         {            
             if (session.IsInTransaction)
             {
