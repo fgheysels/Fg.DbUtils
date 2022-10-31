@@ -2,7 +2,7 @@
 
 namespace Fg.DbUtils
 {
-    internal interface IDbSession : IDbConnection
+    public interface IDbSession : IDbConnection
     {
         /// <summary>
         /// Gets a value indicating whether the current IDbSession has an active transaction or not.
