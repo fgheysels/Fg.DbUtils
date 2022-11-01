@@ -6,6 +6,12 @@
 
 This project introduces a `DbSession` class which manages the connection to a (relational) database and the related transaction (if any).
 
+## Installation
+
+```
+PM > Install-Package Fg.DbUtils
+```
+
 ## Usage
 
 I'm using the `DbSession` class when using Dapper to communicate with a relational database.  When starting a transaction on the `DbSession`, you do not need to pass in the `IDbTransaction` object with each database request.
