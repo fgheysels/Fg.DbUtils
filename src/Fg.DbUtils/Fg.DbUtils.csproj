@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	<Authors>Frederik Gheysels</Authors>
+	  <Authors>Frederik Gheysels</Authors>
     <Copyright>Copyright © 2020 Frederik Gheysels</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/fgheysels/fg.dbutils</PackageProjectUrl>

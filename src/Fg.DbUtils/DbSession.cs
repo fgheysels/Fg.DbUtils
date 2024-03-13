@@ -85,7 +85,7 @@ namespace Fg.DbUtils
                 return;
             }
 
-            Transaction.Commit();
+            Transaction?.Commit();
             Transaction = null;
         }
 
@@ -99,7 +99,7 @@ namespace Fg.DbUtils
                 return;
             }
 
-            Transaction.Rollback();
+            Transaction?.Rollback();
             Transaction = null;
         }
 
