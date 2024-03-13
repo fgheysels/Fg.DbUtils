@@ -3,7 +3,7 @@ using System.Data;
 
 namespace Fg.DbUtils
 {
-    public class DbSessionFactory<TConnection> : IDbSessionFactory where TConnection : IDbConnection
+    public class DbSessionFactory : IDbSessionFactory
     {
         private readonly Func<IDbConnection> _dbConnectionFactory;
 
