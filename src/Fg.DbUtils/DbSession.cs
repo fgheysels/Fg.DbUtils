@@ -110,6 +110,7 @@ namespace Fg.DbUtils
             }
 
             Transaction?.Rollback();
+            _nestedTransactionCount = 0;
             Transaction = null;
         }
 
@@ -125,6 +126,8 @@ namespace Fg.DbUtils
         {
             Transaction?.Rollback();
             _connection.Close();
+
+            Transaction = null;
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
@@ -132,6 +135,8 @@ namespace Fg.DbUtils
         {
             Transaction?.Dispose();
             _connection?.Dispose();
+
+            Transaction = null;
         }
 
         /// <summary>Gets the time to wait while trying to establish a connection before terminating the attempt and generating an error.</summary>
