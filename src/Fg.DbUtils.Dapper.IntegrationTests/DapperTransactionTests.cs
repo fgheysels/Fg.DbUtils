@@ -73,6 +73,21 @@ namespace Fg.DbUtils.Dapper.IntegrationTests
             Assert.Equal(7, result);
         }
 
+        [Fact]
+        public void CommitOnlyHappensOnOuterTransaction()
+        {
+            var dbSession = new DbSession(_connection);
+
+            dbSession.BeginTransaction();
+            dbSession.BeginTransaction();
+            Assert.True(dbSession.IsInTransaction);
+
+            dbSession.CommitTransaction();
+            Assert.True(dbSession.IsInTransaction, "A commit was called on the inner transaction, we cannot commit yet");
+            dbSession.CommitTransaction();
+            Assert.False(dbSession.IsInTransaction, "A commit was called on the outer transaction, we should now no longer have an active transaction");
+        }
+
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {

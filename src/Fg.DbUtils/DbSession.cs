@@ -60,6 +60,8 @@ namespace Fg.DbUtils
             return BeginTransaction(IsolationLevel.ReadCommitted);
         }
 
+        private int _nestedTransactionCount = 0;
+
         /// <summary>Begins a database transaction with the specified <see cref="T:System.Data.IsolationLevel"></see> value.</summary>
         /// <param name="il">One of the <see cref="T:System.Data.IsolationLevel"></see> values.</param>
         /// <returns>An object representing the new transaction.</returns>
@@ -67,9 +69,10 @@ namespace Fg.DbUtils
         {
             if (IsInTransaction)
             {
+                _nestedTransactionCount++;
                 return Transaction;
             }
-            
+
             Transaction = _connection.BeginTransaction(il);
 
             return Transaction;
@@ -85,8 +88,15 @@ namespace Fg.DbUtils
                 return;
             }
 
-            Transaction?.Commit();
-            Transaction = null;
+            if (_nestedTransactionCount == 0)
+            {
+                Transaction?.Commit();
+                Transaction = null;
+            }
+            else
+            {
+                _nestedTransactionCount--;
+            }
         }
 
         /// <summary>
