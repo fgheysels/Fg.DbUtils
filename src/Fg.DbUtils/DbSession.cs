@@ -124,7 +124,7 @@ namespace Fg.DbUtils
         /// <summary>Closes the connection to the database.</summary>
         public void Close()
         {
-            Transaction?.Rollback();
+            RollbackTransaction();
             _connection.Close();
 
             Transaction = null;
