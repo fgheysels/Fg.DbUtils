@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Fg.DbUtils
 {
@@ -37,8 +39,10 @@ namespace Fg.DbUtils
                     action();
                     session.CommitTransaction();
                 }
-                catch
+                catch(Exception ex)
                 {
+                    session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
+
                     session.RollbackTransaction();
                     throw;
                 }
@@ -161,8 +165,10 @@ namespace Fg.DbUtils
                     result = await action();
                     session.CommitTransaction();
                 }
-                catch
+                catch(Exception ex)
                 {
+                    session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
+
                     session.RollbackTransaction();
                     throw;
                 }

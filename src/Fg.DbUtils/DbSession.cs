@@ -1,17 +1,30 @@
-﻿using System.Data;
+﻿using Microsoft.Extensions.Logging;
+using System.Data;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Fg.DbUtils
 {
     public class DbSession : IDbSession
     {
         private readonly IDbConnection _connection;
+        private readonly ILogger<IDbSession> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbSession"/> class.
         /// </summary>
-        public DbSession(IDbConnection connection)
+        public DbSession(IDbConnection connection) : this(connection, NullLogger<IDbSession>.Instance)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbSession"/> class.
+        /// </summary>
+        /// <param name="connection">The <see cref="IDbConnection"/> that must be used to connect to the database.</param>
+        /// <param name="logger">An <see cref="ILogger"/> instance that can be used to log traces.</param>
+        public DbSession(IDbConnection connection, ILogger<IDbSession> logger)
         {
             _connection = connection;
+            _logger = logger;
         }
 
         /// <summary>Gets or sets the string used to open a database.</summary>
@@ -40,7 +53,10 @@ namespace Fg.DbUtils
         /// <summary>Opens a database connection with the settings specified by the ConnectionString property of the provider-specific Connection object.</summary>
         public void Open()
         {
-            _connection.Open();
+            if (_connection.State == ConnectionState.Closed)
+            {
+                _connection.Open();
+            }
         }
 
         /// <summary>Creates and returns a Command object associated with the connection.</summary>
@@ -146,5 +162,7 @@ namespace Fg.DbUtils
         /// <summary>Gets the name of the current database or the database to be used after a connection is opened.</summary>
         /// <returns>The name of the current database or the name of the database to be used once a connection is open. The default value is an empty string.</returns>
         string IDbConnection.Database => _connection.Database;
+
+        ILogger<IDbSession> IDbSession.Logger => _logger;
     }
 }
