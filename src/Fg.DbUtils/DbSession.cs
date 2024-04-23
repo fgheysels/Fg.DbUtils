@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using System.Data;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -89,6 +90,10 @@ namespace Fg.DbUtils
             if (IsInTransaction)
             {
                 _nestedTransactionCount++;
+                using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
+                {
+                    _logger.LogInformation("BeginTransaction: transaction is already active");
+                }
                 return Transaction;
             }
 
@@ -111,10 +116,15 @@ namespace Fg.DbUtils
             {
                 Transaction?.Commit();
                 Transaction = null;
+                _logger.LogDebug("CommitTransaction: transaction committed");
             }
             else
             {
                 _nestedTransactionCount--;
+                using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
+                {
+                    _logger.LogInformation("CommitTransaction: nested transaction count decremented");
+                }
             }
         }
 
