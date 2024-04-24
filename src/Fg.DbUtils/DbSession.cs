@@ -139,8 +139,9 @@ namespace Fg.DbUtils
             }
 
             Transaction?.Rollback();
-            _nestedTransactionCount = 0;
+            Transaction?.Dispose();
             Transaction = null;
+            _nestedTransactionCount = 0;
         }
 
         /// <summary>Changes the current database for an open Connection object.</summary>
@@ -162,10 +163,9 @@ namespace Fg.DbUtils
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            Transaction?.Dispose();
+            _logger.LogInformation("Disposing DbSession");
+            Close();
             _connection?.Dispose();
-
-            Transaction = null;
         }
 
         /// <summary>Gets the time to wait while trying to establish a connection before terminating the attempt and generating an error.</summary>
