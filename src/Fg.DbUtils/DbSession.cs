@@ -114,7 +114,8 @@ namespace Fg.DbUtils
 
             if (_nestedTransactionCount == 0)
             {
-                Transaction?.Commit();
+                Transaction.Commit();
+                Transaction.Dispose();
                 Transaction = null;
                 _logger.LogDebug("CommitTransaction: transaction committed");
             }
