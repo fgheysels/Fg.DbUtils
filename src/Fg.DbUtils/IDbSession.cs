@@ -1,9 +1,10 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Fg.DbUtils
 {
-    public interface IDbSession : IDbConnection
+    public interface IDbSession : IDbConnection, IDisposable
     {
         /// <summary>
         /// Gets a value indicating whether the current IDbSession has an active transaction or not.
