@@ -54,7 +54,7 @@ namespace Fg.DbUtils
         /// <summary>Opens a database connection with the settings specified by the ConnectionString property of the provider-specific Connection object.</summary>
         public void Open()
         {
-            if (_connection.State == ConnectionState.Closed)
+            if (_connection.State != ConnectionState.Open)
             {
                 _connection.Open();
             }
