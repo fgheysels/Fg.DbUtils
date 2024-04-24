@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Data;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Fg.DbUtils
 {
@@ -26,11 +25,11 @@ namespace Fg.DbUtils
         /// <param name="action"></param>
         public static void WithTransaction(this IDbSession session, IsolationLevel isolationLevel, Action action)
         {
-            if (session.IsInTransaction)
-            {
-                action();
-            }
-            else
+            //if (session.IsInTransaction)
+            //{
+            //    action();
+            //}
+            //else
             {
                 session.BeginTransaction(isolationLevel);
 
@@ -110,11 +109,11 @@ namespace Fg.DbUtils
         /// <param name="action"></param>
         public static async Task WithTransactionAsync(this IDbSession session, IsolationLevel isolationLevel, Func<Task> action)
         {
-            if (session.IsInTransaction)
-            {
-                await action();
-            }
-            else
+            //if (session.IsInTransaction)
+            //{
+            //    await action();
+            //}
+            //else
             {
                 session.BeginTransaction(isolationLevel);
 
@@ -149,12 +148,12 @@ namespace Fg.DbUtils
         /// <param name="action"></param>
         public static async Task<TResult> WithTransactionAsync<TResult>(this IDbSession session, IsolationLevel isolationLevel, Func<Task<TResult>> action)
         {
-            if (session.IsInTransaction)
-            {
-                var result = await action();
-                return result;
-            }
-            else
+            //if (session.IsInTransaction)
+            //{
+            //    var result = await action();
+            //    return result;
+            //}
+            //else
             {
                 TResult result;
 
