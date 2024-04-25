@@ -25,26 +25,19 @@ namespace Fg.DbUtils
         /// <param name="action"></param>
         public static void WithTransaction(this IDbSession session, IsolationLevel isolationLevel, Action action)
         {
-            //if (session.IsInTransaction)
-            //{
-            //    action();
-            //}
-            //else
+            session.BeginTransaction(isolationLevel);
+
+            try
             {
-                session.BeginTransaction(isolationLevel);
+                action();
+                session.CommitTransaction();
+            }
+            catch (Exception ex)
+            {
+                session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
 
-                try
-                {
-                    action();
-                    session.CommitTransaction();
-                }
-                catch(Exception ex)
-                {
-                    session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
-
-                    session.RollbackTransaction();
-                    throw;
-                }
+                session.RollbackTransaction();
+                throw;
             }
         }
 
@@ -109,24 +102,17 @@ namespace Fg.DbUtils
         /// <param name="action"></param>
         public static async Task WithTransactionAsync(this IDbSession session, IsolationLevel isolationLevel, Func<Task> action)
         {
-            //if (session.IsInTransaction)
-            //{
-            //    await action();
-            //}
-            //else
-            {
-                session.BeginTransaction(isolationLevel);
+            session.BeginTransaction(isolationLevel);
 
-                try
-                {
-                    await action();
-                    session.CommitTransaction();
-                }
-                catch
-                {
-                    session.RollbackTransaction();
-                    throw;
-                }
+            try
+            {
+                await action();
+                session.CommitTransaction();
+            }
+            catch
+            {
+                session.RollbackTransaction();
+                throw;
             }
         }
 
@@ -148,32 +134,24 @@ namespace Fg.DbUtils
         /// <param name="action"></param>
         public static async Task<TResult> WithTransactionAsync<TResult>(this IDbSession session, IsolationLevel isolationLevel, Func<Task<TResult>> action)
         {
-            //if (session.IsInTransaction)
-            //{
-            //    var result = await action();
-            //    return result;
-            //}
-            //else
+            TResult result;
+
+            session.BeginTransaction(isolationLevel);
+
+            try
             {
-                TResult result;
-
-                session.BeginTransaction(isolationLevel);
-
-                try
-                {
-                    result = await action();
-                    session.CommitTransaction();
-                }
-                catch(Exception ex)
-                {
-                    session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
-
-                    session.RollbackTransaction();
-                    throw;
-                }
-
-                return result;
+                result = await action();
+                session.CommitTransaction();
             }
+            catch (Exception ex)
+            {
+                session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
+
+                session.RollbackTransaction();
+                throw;
+            }
+
+            return result;
         }
     }
 }
