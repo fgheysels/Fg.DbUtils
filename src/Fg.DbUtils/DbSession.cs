@@ -65,7 +65,7 @@ namespace Fg.DbUtils
         public IDbCommand CreateCommand()
         {
             var command = _connection.CreateCommand();
-            //if (IsInTransaction)
+            if (IsInTransaction)
             {
                 command.Transaction = Transaction;
             }
