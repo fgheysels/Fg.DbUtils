@@ -59,29 +59,22 @@ namespace Fg.DbUtils
         /// <param name="action">The action that must be performed.</param>
         public static TResult WithTransaction<TResult>(this IDbSession session, IsolationLevel isolationLevel, Func<TResult> action)
         {
-            if (session.IsInTransaction)
+            TResult result;
+
+            session.BeginTransaction(isolationLevel);
+
+            try
             {
-                return action();
+                result = action();
+                session.CommitTransaction();
             }
-            else
+            catch
             {
-                TResult result;
-
-                session.BeginTransaction(isolationLevel);
-
-                try
-                {
-                    result = action();
-                    session.CommitTransaction();
-                }
-                catch
-                {
-                    session.RollbackTransaction();
-                    throw;
-                }
-
-                return result;
+                session.RollbackTransaction();
+                throw;
             }
+
+            return result;
         }
 
         /// <summary>
