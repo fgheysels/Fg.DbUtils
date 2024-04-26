@@ -92,7 +92,7 @@ namespace Fg.DbUtils
                 _nestedTransactionCount++;
                 using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
                 {
-                    _logger.LogInformation("BeginTransaction: transaction is already active");
+                    _logger.LogDebug("BeginTransaction: transaction is already active - NestedTransactionCount incremented");
                 }
                 return Transaction;
             }
@@ -124,7 +124,7 @@ namespace Fg.DbUtils
                 _nestedTransactionCount--;
                 using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
                 {
-                    _logger.LogInformation("CommitTransaction: nested transaction count decremented");
+                    _logger.LogDebug("CommitTransaction: nested transaction count decremented");
                 }
             }
         }
@@ -164,7 +164,7 @@ namespace Fg.DbUtils
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            _logger.LogInformation("Disposing DbSession");
+            _logger.LogDebug("Disposing DbSession");
             Close();
             _connection?.Dispose();
         }
