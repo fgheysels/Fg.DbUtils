@@ -59,22 +59,20 @@ namespace Fg.DbUtils
         /// <param name="action">The action that must be performed.</param>
         public static TResult WithTransaction<TResult>(this IDbSession session, IsolationLevel isolationLevel, Func<TResult> action)
         {
-            TResult result;
-
             session.BeginTransaction(isolationLevel);
 
             try
             {
-                result = action();
+                TResult result = action();
                 session.CommitTransaction();
+
+                return result;
             }
             catch
             {
                 session.RollbackTransaction();
                 throw;
             }
-
-            return result;
         }
 
         /// <summary>
@@ -127,14 +125,13 @@ namespace Fg.DbUtils
         /// <param name="action"></param>
         public static async Task<TResult> WithTransactionAsync<TResult>(this IDbSession session, IsolationLevel isolationLevel, Func<Task<TResult>> action)
         {
-            TResult result;
-
             session.BeginTransaction(isolationLevel);
 
             try
             {
-                result = await action();
+                TResult result = await action();
                 session.CommitTransaction();
+                return result;
             }
             catch (Exception ex)
             {
@@ -143,8 +140,6 @@ namespace Fg.DbUtils
                 session.RollbackTransaction();
                 throw;
             }
-
-            return result;
         }
     }
 }
