@@ -68,8 +68,10 @@ namespace Fg.DbUtils
 
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
+                session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
+
                 session.RollbackTransaction();
                 throw;
             }
@@ -100,8 +102,10 @@ namespace Fg.DbUtils
                 await action();
                 session.CommitTransaction();
             }
-            catch
+            catch (Exception ex)
             {
+                session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
+
                 session.RollbackTransaction();
                 throw;
             }
