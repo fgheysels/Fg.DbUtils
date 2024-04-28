@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -24,6 +25,16 @@ namespace Fg.DbUtils
         /// <param name="logger">An <see cref="ILogger"/> instance that can be used to log traces.</param>
         public DbSession(IDbConnection connection, ILogger<IDbSession> logger)
         {
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
+
+            if (logger == null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
             _connection = connection;
             _logger = logger;
         }
