@@ -34,7 +34,7 @@ namespace Fg.DbUtils
             }
             catch (Exception ex)
             {
-                session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
+                session.Logger?.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
 
                 session.RollbackTransaction();
                 throw;
@@ -70,7 +70,7 @@ namespace Fg.DbUtils
             }
             catch (Exception ex)
             {
-                session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
+                session.Logger?.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
 
                 session.RollbackTransaction();
                 throw;
@@ -139,7 +139,7 @@ namespace Fg.DbUtils
             }
             catch (Exception ex)
             {
-                session.Logger.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
+                session.Logger?.LogError(ex, "An exception occurred while performing database-operations in a transaction.");
 
                 session.RollbackTransaction();
                 throw;
