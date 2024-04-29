@@ -120,8 +120,6 @@ namespace Fg.DbUtils
         {
             if (IsInTransaction)
             {
-                DbTransaction x;
-
                 _nestedTransactionCount++;
                 using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
                 {
