@@ -22,11 +22,7 @@ namespace Fg.DbUtils
 
         public IDbSession CreateDbSession()
         {
-            var session = new DbSession(_dbConnectionFactory(), _loggerFactory());
-
-            session.Open();
-
-            return session;
+            return CreateDbSession(DbSessionSettings.Default);
         }
 
         public IDbSession CreateDbSession(DbSessionSettings settings)
