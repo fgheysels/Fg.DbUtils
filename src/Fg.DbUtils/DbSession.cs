@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Data.Common;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Fg.DbUtils
@@ -9,6 +10,7 @@ namespace Fg.DbUtils
     public class DbSession : IDbSession
     {
         private readonly IDbConnection _connection;
+        private readonly DbSessionSettings _settings;
         private readonly ILogger<IDbSession> _logger;
 
         /// <summary>
@@ -23,11 +25,26 @@ namespace Fg.DbUtils
         /// </summary>
         /// <param name="connection">The <see cref="IDbConnection"/> that must be used to connect to the database.</param>
         /// <param name="logger">An <see cref="ILogger"/> instance that can be used to log traces.</param>
-        public DbSession(IDbConnection connection, ILogger<IDbSession> logger)
+        public DbSession(IDbConnection connection, ILogger<IDbSession> logger) : this(connection, DbSessionSettings.Default, logger)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbSession"/> class.
+        /// </summary>
+        /// <param name="connection">The <see cref="IDbConnection"/> that must be used to connect to the database.</param>
+        /// <param name="settings">A <see cref="DbSessionSettings"/> instance that defines which settings must be applied.</param>
+        /// <param name="logger">An <see cref="ILogger"/> instance that can be used to log traces.</param>
+        public DbSession(IDbConnection connection, DbSessionSettings settings, ILogger<IDbSession> logger)
         {
             if (connection == null)
             {
                 throw new ArgumentNullException(nameof(connection));
+            }
+
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
             }
 
             if (logger == null)
@@ -36,6 +53,7 @@ namespace Fg.DbUtils
             }
 
             _connection = connection;
+            _settings = settings;
             _logger = logger;
         }
 
@@ -76,6 +94,8 @@ namespace Fg.DbUtils
         public IDbCommand CreateCommand()
         {
             var command = _connection.CreateCommand();
+            command.CommandTimeout = (int)_settings.CommandTimeout.TotalSeconds;
+
             if (IsInTransaction)
             {
                 command.Transaction = Transaction;
@@ -100,6 +120,8 @@ namespace Fg.DbUtils
         {
             if (IsInTransaction)
             {
+                DbTransaction x;
+
                 _nestedTransactionCount++;
                 using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
                 {

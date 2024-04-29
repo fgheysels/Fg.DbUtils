@@ -28,5 +28,14 @@ namespace Fg.DbUtils
 
             return session;
         }
+
+        public IDbSession CreateDbSession(DbSessionSettings settings)
+        {
+            var session = new DbSession(_dbConnectionFactory(), settings, _loggerFactory());
+
+            session.Open();
+
+            return session;
+        }
     }
 }
