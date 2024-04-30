@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Data;
-using System.Data.Common;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Fg.DbUtils
