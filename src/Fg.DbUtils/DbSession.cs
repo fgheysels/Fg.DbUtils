@@ -86,6 +86,11 @@ namespace Fg.DbUtils
             {
                 _connection.Open();
             }
+
+            if (_nestedTransactionCount > 0)
+            {
+                _logger.LogDebug($"NestedTransactionCount > 0 when opening session ({_nestedTransactionCount})");
+            }
         }
 
         /// <summary>Creates and returns a Command object associated with the connection.</summary>
@@ -135,6 +140,11 @@ namespace Fg.DbUtils
 
             Transaction = _connection.BeginTransaction(isolationLevel);
 
+            if (_nestedTransactionCount != 0)
+            {
+                _logger.LogDebug($"NesteTransaction is {_nestedTransactionCount} on starting transaction");
+            }
+
             return Transaction;
         }
 
@@ -172,6 +182,7 @@ namespace Fg.DbUtils
         {
             if (IsInTransaction == false)
             {
+                _logger.LogDebug("Rollback is called while not in transaction");
                 return;
             }
 
