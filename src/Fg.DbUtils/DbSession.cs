@@ -140,11 +140,13 @@ namespace Fg.DbUtils
 
             Transaction = _connection.BeginTransaction(isolationLevel);
 
+
             if (_nestedTransactionCount != 0)
             {
                 _logger.LogDebug($"NesteTransaction is {_nestedTransactionCount} on starting transaction");
             }
 
+            _nestedTransactionCount = 0;
             return Transaction;
         }
 
