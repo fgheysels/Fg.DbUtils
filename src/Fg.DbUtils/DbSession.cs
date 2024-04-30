@@ -124,6 +124,12 @@ namespace Fg.DbUtils
                 {
                     _logger.LogDebug($"BeginTransaction: transaction is already active - NestedTransactionCount incremented ({_nestedTransactionCount})");
                 }
+
+                if (_nestedTransactionCount > 1)
+                {
+                    _logger.LogDebug("NestedTransaction > 1 - stacktrace: " + Environment.StackTrace);
+                }
+
                 return Transaction;
             }
 
