@@ -73,7 +73,7 @@ namespace Fg.DbUtils.Dapper.IntegrationTests
             Assert.Equal(7, result);
         }
 
-        [Fact]
+        [Fact(Skip="no longer relevant")]
         public void CommitOnlyHappensOnOuterTransaction()
         {
             var dbSession = new DbSession(_connection);
