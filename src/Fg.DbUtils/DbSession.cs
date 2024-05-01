@@ -124,18 +124,19 @@ namespace Fg.DbUtils
         {
             if (IsInTransaction)
             {
-                _nestedTransactionCount++;
-                using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
-                {
-                    _logger.LogDebug($"BeginTransaction: transaction is already active - NestedTransactionCount incremented ({_nestedTransactionCount})");
-                }
+                throw new InvalidOperationException("DbSession already has an active transaction");
+                //_nestedTransactionCount++;
+                //using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
+                //{
+                //    _logger.LogDebug($"BeginTransaction: transaction is already active - NestedTransactionCount incremented ({_nestedTransactionCount})");
+                //}
 
-                if (_nestedTransactionCount > 1)
-                {
-                    _logger.LogDebug("NestedTransaction > 1 - stacktrace: " + Environment.StackTrace);
-                }
+                //if (_nestedTransactionCount > 1)
+                //{
+                //    _logger.LogDebug("NestedTransaction > 1 - stacktrace: " + Environment.StackTrace);
+                //}
 
-                return Transaction;
+                //return Transaction;
             }
 
             Transaction = _connection.BeginTransaction(isolationLevel);
@@ -160,21 +161,21 @@ namespace Fg.DbUtils
                 return;
             }
 
-            if (_nestedTransactionCount == 0)
-            {
-                Transaction.Commit();
-                Transaction.Dispose();
-                Transaction = null;
-                _logger.LogDebug("CommitTransaction: transaction committed");
-            }
-            else
-            {
-                _nestedTransactionCount--;
-                using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
-                {
-                    _logger.LogDebug($"CommitTransaction: nested transaction count decremented ({_nestedTransactionCount})");
-                }
-            }
+            //if (_nestedTransactionCount == 0)
+            //{
+            Transaction.Commit();
+            Transaction.Dispose();
+            Transaction = null;
+            _logger.LogDebug("CommitTransaction: transaction committed");
+            //}
+            //else
+            //{
+            //    _nestedTransactionCount--;
+            //    using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
+            //    {
+            //        _logger.LogDebug($"CommitTransaction: nested transaction count decremented ({_nestedTransactionCount})");
+            //    }
+            //}
         }
 
         /// <summary>
