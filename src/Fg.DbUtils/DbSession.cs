@@ -86,11 +86,6 @@ namespace Fg.DbUtils
             {
                 _connection.Open();
             }
-
-            if (_nestedTransactionCount > 0)
-            {
-                _logger.LogDebug($"NestedTransactionCount > 0 when opening session ({_nestedTransactionCount})");
-            }
         }
 
         /// <summary>Creates and returns a Command object associated with the connection.</summary>
@@ -115,8 +110,6 @@ namespace Fg.DbUtils
             return BeginTransaction(IsolationLevel.ReadCommitted);
         }
 
-        private int _nestedTransactionCount = 0;
-
         /// <summary>Begins a database transaction with the specified <see cref="T:System.Data.IsolationLevel"></see> value.</summary>
         /// <param name="isolationLevel">One of the <see cref="T:System.Data.IsolationLevel"></see> values.</param>
         /// <returns>An object representing the new transaction.</returns>
@@ -125,29 +118,10 @@ namespace Fg.DbUtils
             if (IsInTransaction)
             {
                 throw new InvalidOperationException("DbSession already has an active transaction");
-                //_nestedTransactionCount++;
-                //using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
-                //{
-                //    _logger.LogDebug($"BeginTransaction: transaction is already active - NestedTransactionCount incremented ({_nestedTransactionCount})");
-                //}
-
-                //if (_nestedTransactionCount > 1)
-                //{
-                //    _logger.LogDebug("NestedTransaction > 1 - stacktrace: " + Environment.StackTrace);
-                //}
-
-                //return Transaction;
             }
 
             Transaction = _connection.BeginTransaction(isolationLevel);
 
-
-            if (_nestedTransactionCount != 0)
-            {
-                _logger.LogDebug($"NesteTransaction is {_nestedTransactionCount} on starting transaction");
-            }
-
-            _nestedTransactionCount = 0;
             return Transaction;
         }
 
@@ -161,21 +135,10 @@ namespace Fg.DbUtils
                 return;
             }
 
-            //if (_nestedTransactionCount == 0)
-            //{
             Transaction.Commit();
             Transaction.Dispose();
             Transaction = null;
-            _logger.LogDebug("CommitTransaction: transaction committed");
-            //}
-            //else
-            //{
-            //    _nestedTransactionCount--;
-            //    using (_logger.BeginScope(new Dictionary<string, object>() { ["NestedTransactionCount"] = _nestedTransactionCount }))
-            //    {
-            //        _logger.LogDebug($"CommitTransaction: nested transaction count decremented ({_nestedTransactionCount})");
-            //    }
-            //}
+            _logger.LogDebug("Active Transaction committed");
         }
 
         /// <summary>
@@ -185,14 +148,13 @@ namespace Fg.DbUtils
         {
             if (IsInTransaction == false)
             {
-                _logger.LogDebug("Rollback is called while not in transaction");
                 return;
             }
 
             Transaction?.Rollback();
             Transaction?.Dispose();
             Transaction = null;
-            _nestedTransactionCount = 0;
+            _logger.LogDebug("Active Transaction rollbacked");
         }
 
         /// <summary>Changes the current database for an open Connection object.</summary>
@@ -209,7 +171,6 @@ namespace Fg.DbUtils
             _connection.Close();
 
             Transaction = null;
-            _nestedTransactionCount = 0;
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
