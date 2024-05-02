@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace Fg.DbUtils
@@ -25,5 +26,7 @@ namespace Fg.DbUtils
         /// </summary>
         /// <remarks>This property is defined to have the possibility to call the Logger in extensions methods.</remarks>
         ILogger<IDbSession> Logger { get; }
+
+        Guid SessionId { get; }
     }
 }

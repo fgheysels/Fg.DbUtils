@@ -43,7 +43,7 @@ namespace Fg.DbUtils
                     session.RollbackTransaction();
 
                     session.Logger?.LogError(ex,
-                        "An exception occurred while performing database-operations in a transaction.");
+                        "An exception occurred while performing database-operations in a transaction. DbSessionId " + session.SessionId);
                     throw;
                 }
             }
@@ -87,7 +87,7 @@ namespace Fg.DbUtils
                     session.RollbackTransaction();
 
                     session.Logger?.LogError(ex,
-                        "An exception occurred while performing database-operations in a transaction.");
+                        "An exception occurred while performing database-operations in a transaction. DbSessionId " + session.SessionId);
                     throw;
                 }
             }
@@ -129,7 +129,7 @@ namespace Fg.DbUtils
                     session.RollbackTransaction();
 
                     session.Logger?.LogError(ex,
-                        "An exception occurred while performing database-operations in a transaction.");
+                        "An exception occurred while performing database-operations in a transaction. DbSessionId " + session.SessionId);
                     throw;
                 }
             }
@@ -172,7 +172,7 @@ namespace Fg.DbUtils
                     session.RollbackTransaction();
 
                     session.Logger?.LogError(ex,
-                        "An exception occurred while performing database-operations in a transaction.");
+                        "An exception occurred while performing database-operations in a transaction. DbSessionId " + session.SessionId);
                     throw;
                 }
             }

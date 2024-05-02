@@ -14,6 +14,8 @@ namespace Fg.DbUtils
 
         private readonly Guid _sessionId = Guid.NewGuid();
 
+        Guid IDbSession.SessionId => _sessionId;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DbSession"/> class.
         /// </summary>
