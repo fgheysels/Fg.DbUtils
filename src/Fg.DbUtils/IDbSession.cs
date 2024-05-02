@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace Fg.DbUtils
 {
@@ -18,5 +19,11 @@ namespace Fg.DbUtils
         /// Rollbacks the active transaction of this IDbSession.
         /// </summary>
         void RollbackTransaction();
+
+        /// <summary>
+        /// Gets the logger that is used by this IDbSession.
+        /// </summary>
+        /// <remarks>This property is defined to have the possibility to call the Logger in extensions methods.</remarks>
+        ILogger<IDbSession> Logger { get; }
     }
 }

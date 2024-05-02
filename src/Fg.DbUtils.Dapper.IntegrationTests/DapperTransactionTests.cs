@@ -73,6 +73,16 @@ namespace Fg.DbUtils.Dapper.IntegrationTests
             Assert.Equal(7, result);
         }
 
+        [Fact]
+        public void BeginTransaction_Throws_WhenTransactionAlreadyActive()
+        {
+            var dbSession = new DbSession(_connection);
+
+            dbSession.BeginTransaction();
+
+            Assert.Throws<InvalidOperationException>(() => dbSession.BeginTransaction());
+        }
+
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {

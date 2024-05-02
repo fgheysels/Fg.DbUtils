@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -37,9 +38,12 @@ namespace Fg.DbUtils
                     action();
                     session.CommitTransaction();
                 }
-                catch
+                catch (Exception ex)
                 {
                     session.RollbackTransaction();
+
+                    session.Logger?.LogError(ex,
+                        "An exception occurred while performing database-operations in a transaction.");
                     throw;
                 }
             }
@@ -69,22 +73,23 @@ namespace Fg.DbUtils
             }
             else
             {
-                TResult result;
-
                 session.BeginTransaction(isolationLevel);
 
                 try
                 {
-                    result = action();
+                    TResult result = action();
                     session.CommitTransaction();
+
+                    return result;
                 }
-                catch
+                catch (Exception ex)
                 {
                     session.RollbackTransaction();
+
+                    session.Logger?.LogError(ex,
+                        "An exception occurred while performing database-operations in a transaction.");
                     throw;
                 }
-
-                return result;
             }
         }
 
@@ -119,9 +124,12 @@ namespace Fg.DbUtils
                     await action();
                     session.CommitTransaction();
                 }
-                catch
+                catch (Exception ex)
                 {
                     session.RollbackTransaction();
+
+                    session.Logger?.LogError(ex,
+                        "An exception occurred while performing database-operations in a transaction.");
                     throw;
                 }
             }
@@ -147,27 +155,26 @@ namespace Fg.DbUtils
         {
             if (session.IsInTransaction)
             {
-                var result = await action();
-                return result;
+                return (await action());
             }
             else
             {
-                TResult result;
-
                 session.BeginTransaction(isolationLevel);
 
                 try
                 {
-                    result = await action();
+                    TResult result = await action();
                     session.CommitTransaction();
+                    return result;
                 }
-                catch
+                catch (Exception ex)
                 {
                     session.RollbackTransaction();
+
+                    session.Logger?.LogError(ex,
+                        "An exception occurred while performing database-operations in a transaction.");
                     throw;
                 }
-
-                return result;
             }
         }
     }
