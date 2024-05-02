@@ -12,6 +12,8 @@ namespace Fg.DbUtils
         private readonly DbSessionSettings _settings;
         private readonly ILogger<IDbSession> _logger;
 
+        private readonly Guid _sessionId = Guid.NewGuid();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DbSession"/> class.
         /// </summary>
@@ -85,6 +87,8 @@ namespace Fg.DbUtils
             if (_connection.State != ConnectionState.Open)
             {
                 _connection.Open();
+
+                _logger.LogDebug("DbSession connection opened - DbSessionId " + _sessionId);
             }
         }
 
@@ -122,6 +126,8 @@ namespace Fg.DbUtils
 
             Transaction = _connection.BeginTransaction(isolationLevel);
 
+            _logger.LogDebug("DbSession Transaction started - DbSessionId " + _sessionId);
+
             return Transaction;
         }
 
@@ -138,7 +144,7 @@ namespace Fg.DbUtils
             Transaction.Commit();
             Transaction.Dispose();
             Transaction = null;
-            _logger.LogDebug("Active Transaction committed");
+            _logger.LogDebug("DbSession Active Transaction committed - DbSessionId " + _sessionId);
         }
 
         /// <summary>
@@ -154,7 +160,7 @@ namespace Fg.DbUtils
             Transaction?.Rollback();
             Transaction?.Dispose();
             Transaction = null;
-            _logger.LogDebug("Active Transaction rollbacked");
+            _logger.LogDebug("DbSession Active Transaction rollbacked - DbSessionId " + _sessionId);
         }
 
         /// <summary>Changes the current database for an open Connection object.</summary>
@@ -176,7 +182,7 @@ namespace Fg.DbUtils
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            _logger.LogDebug("Disposing DbSession");
+            _logger.LogDebug("DbSession Disposing DbSession - DbSessionId " + _sessionId);
             Close();
             _connection?.Dispose();
         }
