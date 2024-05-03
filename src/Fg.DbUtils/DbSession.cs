@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using System.Data;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using System;
+using System.Data;
 
 namespace Fg.DbUtils
 {
@@ -90,7 +89,7 @@ namespace Fg.DbUtils
             {
                 _connection.Open();
 
-                _logger.LogDebug("DbSession connection opened - DbSessionId " + _sessionId);
+                _logger.LogDebug("Connection opened on DbSession with Id {DbSessionId}", _sessionId);
             }
         }
 
@@ -133,7 +132,7 @@ namespace Fg.DbUtils
                 throw new InvalidOperationException("BeginTransaction was not able to start a transaction");
             }
 
-            _logger.LogDebug("DbSession Transaction started - DbSessionId " + _sessionId);
+            _logger.LogDebug("Transaction started on DbSession with Id {DbSessionId}", _sessionId);
 
             return Transaction;
         }
@@ -151,7 +150,7 @@ namespace Fg.DbUtils
             Transaction.Commit();
             Transaction.Dispose();
             Transaction = null;
-            _logger.LogDebug("DbSession Active Transaction committed - DbSessionId " + _sessionId);
+            _logger.LogDebug("Transaction committed on DbSession with Id {DbSessionId}", _sessionId);
         }
 
         /// <summary>
@@ -167,7 +166,7 @@ namespace Fg.DbUtils
             Transaction?.Rollback();
             Transaction?.Dispose();
             Transaction = null;
-            _logger.LogDebug("DbSession Active Transaction rollbacked - DbSessionId " + _sessionId);
+            _logger.LogDebug("Transaction rollbacked on DbSession with Id {DbSessionId}", _sessionId);
         }
 
         /// <summary>Changes the current database for an open Connection object.</summary>
@@ -189,7 +188,7 @@ namespace Fg.DbUtils
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            _logger.LogDebug("DbSession Disposing DbSession - DbSessionId " + _sessionId);
+            _logger.LogDebug("Disposing DbSession with Id {DbSessionId} ", _sessionId);
             Close();
             _connection?.Dispose();
         }

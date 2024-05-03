@@ -7,6 +7,11 @@ namespace Fg.DbUtils
     public interface IDbSession : IDbConnection
     {
         /// <summary>
+        /// Gets an id that uniquely identifies the IDbSession instance.
+        /// </summary>
+        Guid SessionId { get; }
+
+        /// <summary>
         /// Gets a value indicating whether the current IDbSession has an active transaction or not.
         /// </summary>
         bool IsInTransaction { get; }
@@ -26,7 +31,5 @@ namespace Fg.DbUtils
         /// </summary>
         /// <remarks>This property is defined to have the possibility to call the Logger in extensions methods.</remarks>
         ILogger<IDbSession> Logger { get; }
-
-        Guid SessionId { get; }
     }
 }
