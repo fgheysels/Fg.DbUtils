@@ -1,10 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace Fg.DbUtils
 {
     public interface IDbSession : IDbConnection
     {
+        /// <summary>
+        /// Gets an id that uniquely identifies the IDbSession instance.
+        /// </summary>
+        Guid SessionId { get; }
+
         /// <summary>
         /// Gets a value indicating whether the current IDbSession has an active transaction or not.
         /// </summary>
