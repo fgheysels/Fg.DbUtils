@@ -128,6 +128,11 @@ namespace Fg.DbUtils
 
             Transaction = _connection.BeginTransaction(isolationLevel);
 
+            if (Transaction == null)
+            {
+                throw new InvalidOperationException("BeginTransaction was not able to start a transaction");
+            }
+
             _logger.LogDebug("DbSession Transaction started - DbSessionId " + _sessionId);
 
             return Transaction;
