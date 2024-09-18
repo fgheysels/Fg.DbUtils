@@ -5,14 +5,14 @@ using Xunit;
 
 namespace Fg.DbUtils.Dapper.IntegrationTests
 {
-    public class DapperTransactionTests : IDisposable
+    public class DbSessionTransactionTests : IDisposable
     {
         private readonly SQLiteConnection _connection;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DapperTransactionTests"/> class.
+        /// Initializes a new instance of the <see cref="DbSessionTransactionTests"/> class.
         /// </summary>
-        public DapperTransactionTests()
+        public DbSessionTransactionTests()
         {
             _connection = SqliteDatabase.OpenDatabase();
         }
@@ -81,6 +81,22 @@ namespace Fg.DbUtils.Dapper.IntegrationTests
             dbSession.BeginTransaction();
 
             Assert.Throws<InvalidOperationException>(() => dbSession.BeginTransaction());
+        }
+
+        [Fact]
+        public void CommitTransaction_Executes_RegisteredPostTransactionActions()
+        {
+            var dbSession = new DbSession(_connection);
+
+            dbSession.BeginTransaction();
+
+            bool postTransactionExecuted = false;
+
+            dbSession.RegisterPostTransactionAction(() => postTransactionExecuted = true);
+
+            dbSession.CommitTransaction();
+
+            Assert.True(postTransactionExecuted);
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Fg.DbUtils
@@ -151,6 +152,12 @@ namespace Fg.DbUtils
             Transaction.Dispose();
             Transaction = null;
             _logger.LogDebug("Transaction committed on DbSession with Id {DbSessionId}", _sessionId);
+
+            while (_postTransactionActions.Count > 0)
+            {
+                var action = _postTransactionActions.Dequeue();
+                action();
+            }
         }
 
         /// <summary>
@@ -167,6 +174,13 @@ namespace Fg.DbUtils
             Transaction?.Dispose();
             Transaction = null;
             _logger.LogDebug("Transaction rollbacked on DbSession with Id {DbSessionId}", _sessionId);
+        }
+
+        private readonly Queue<Action> _postTransactionActions = new Queue<Action>();
+
+        public void RegisterPostTransactionAction(Action action)
+        {
+            _postTransactionActions.Enqueue(action);
         }
 
         /// <summary>Changes the current database for an open Connection object.</summary>
