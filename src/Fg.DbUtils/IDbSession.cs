@@ -27,6 +27,12 @@ namespace Fg.DbUtils
         void RollbackTransaction();
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        void RegisterPostTransactionAction(Action action);
+
+        /// <summary>
         /// Gets the logger that is used by this IDbSession.
         /// </summary>
         /// <remarks>This property is defined to have the possibility to call the Logger in extensions methods.</remarks>
