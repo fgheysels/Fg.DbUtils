@@ -173,7 +173,10 @@ namespace Fg.DbUtils
             Transaction?.Rollback();
             Transaction?.Dispose();
             Transaction = null;
+            
             _logger.LogDebug("Transaction rollbacked on DbSession with Id {DbSessionId}", _sessionId);
+
+            _postTransactionActions.Clear();
         }
 
         private readonly Queue<Action> _postTransactionActions = new Queue<Action>();
