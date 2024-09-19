@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using Dapper;
+using Microsoft.VisualStudio.TestPlatform.Common.Telemetry;
 using Xunit;
 
 namespace Fg.DbUtils.Dapper.IntegrationTests
@@ -97,6 +98,16 @@ namespace Fg.DbUtils.Dapper.IntegrationTests
             dbSession.CommitTransaction();
 
             Assert.True(postTransactionExecuted);
+        }
+
+        [Fact]
+        public void RegisterPostTransaction_Throws_WhenNoTransactionIsActive()
+        {
+            var dbSession = new DbSession(_connection);
+
+            Assert.False(dbSession.IsInTransaction);
+
+            Assert.Throws<InvalidOperationException>(() => dbSession.RegisterPostTransactionAction(() => Console.WriteLine("No Operation") ));
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>

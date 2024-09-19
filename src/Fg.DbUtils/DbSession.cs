@@ -173,7 +173,7 @@ namespace Fg.DbUtils
             Transaction?.Rollback();
             Transaction?.Dispose();
             Transaction = null;
-            
+
             _logger.LogDebug("Transaction rollbacked on DbSession with Id {DbSessionId}", _sessionId);
 
             _postTransactionActions.Clear();
@@ -189,7 +189,7 @@ namespace Fg.DbUtils
         /// <exception cref="InvalidOperationException">Thrown when the DbSession is currently not in a transaction.</exception>
         public void RegisterPostTransactionAction(Action action)
         {
-            if (IsInTransaction)
+            if (IsInTransaction == false)
             {
                 throw new InvalidOperationException("Unable to register a PostTransactionAction as the DbSession is currently not in a transaction");
             }
