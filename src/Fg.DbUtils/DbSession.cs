@@ -181,8 +181,19 @@ namespace Fg.DbUtils
 
         private readonly Queue<Action> _postTransactionActions = new Queue<Action>();
 
+        /// <summary>
+        /// Registers an <see cref="Action"/> that must be executed right after the current Transaction is committed.
+        /// </summary>
+        /// <remarks>The registered actions are executed in a 'fire and forget' manner.  If an action contains async code, the action is not awaited.</remarks>
+        /// <param name="action"></param>
+        /// <exception cref="InvalidOperationException">Thrown when the DbSession is currently not in a transaction.</exception>
         public void RegisterPostTransactionAction(Action action)
         {
+            if (IsInTransaction)
+            {
+                throw new InvalidOperationException("Unable to register a PostTransactionAction as the DbSession is currently not in a transaction");
+            }
+
             _postTransactionActions.Enqueue(action);
         }
 

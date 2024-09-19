@@ -27,9 +27,10 @@ namespace Fg.DbUtils
         void RollbackTransaction();
 
         /// <summary>
-        /// 
+        /// Register an <see cref="Action"/> that must be executed after the current Transaction is committed.
         /// </summary>
-        /// <param name="action"></param>
+        /// <remarks>Multiple actions can be registered; the action that was registered first, will be executed first.</remarks>
+        /// <param name="action">The action that must be executed.</param>
         void RegisterPostTransactionAction(Action action);
 
         /// <summary>
