@@ -42,7 +42,7 @@ namespace Fg.DbUtils
                 {
                     session.RollbackTransaction();
 
-                    session.Logger?.LogError(ex,
+                    session.Logger?.LogDebug(ex,
                         "An exception occurred while performing database-operations in a transaction on DbSession with Id  {DbSessionId}", session.SessionId);
                     throw;
                 }
@@ -86,7 +86,7 @@ namespace Fg.DbUtils
                 {
                     session.RollbackTransaction();
 
-                    session.Logger?.LogError(ex,
+                    session.Logger?.LogDebug(ex,
                         "An exception occurred while performing database-operations in a transaction on DbSession with Id  {DbSessionId}", session.SessionId);
                     throw;
                 }
@@ -128,7 +128,7 @@ namespace Fg.DbUtils
                 {
                     session.RollbackTransaction();
 
-                    session.Logger?.LogError(ex,
+                    session.Logger?.LogDebug(ex,
                         "An exception occurred while performing database-operations in a transaction on DbSession with Id  {DbSessionId}", session.SessionId);
                     throw;
                 }
@@ -171,7 +171,7 @@ namespace Fg.DbUtils
                 {
                     session.RollbackTransaction();
 
-                    session.Logger?.LogError(ex,
+                    session.Logger?.LogDebug(ex,
                         "An exception occurred while performing database-operations in a transaction on DbSession with Id  {DbSessionId}", session.SessionId);
                     throw;
                 }
