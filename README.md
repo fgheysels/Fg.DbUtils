@@ -37,3 +37,18 @@ await session.WithTransactionAsync( async () =>
     // When no exception occurs, the transaction is committed
 });
 ```
+
+Note that `ExecuteAsync` is not a member method of `IDbSession` or `DbSession`.  Instead, this is an extension method that is defined by the [Dapper micro ORM](https://github.com/DapperLib/Dapper).
+
+This means that you can use `DbSession` as well in conjunction with Dapper to easily execute SELECT queries on your database, and Dapper will translate the resultset to your object-model:
+
+```csharp
+DbSession session = new DbSession(_connection);
+
+IEnumerable<Person> persons = await session.QueryAsync("SELECT TOP 20 FirstName, LastName FROM Persons");
+
+foreach( var person in persons )
+{
+    Console.WriteLine($"Firstname = {person.FirstName} LastName = {person.LastName}");
+}
+```

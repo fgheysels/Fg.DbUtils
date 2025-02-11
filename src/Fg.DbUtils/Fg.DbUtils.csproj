@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/fgheysels/fg.dbutils</PackageProjectUrl>
     <RepositoryUrl>https://github.com/fgheysels/fg.dbutils</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <Description>Introduces a DbSession object that manages the database connnection and transaction.</Description>
+    <Description>Introduces a DbSession object that manages the database connnection and transaction. The IDbSession interface implements the .NET IDbConnection interface and it's therefore very easy to use to use this with the Dapper micro ORM.</Description>
     <PackageTags>DbSession Dapper Transaction Connection IDbConnection IDbTransaction</PackageTags>
   </PropertyGroup>
 
